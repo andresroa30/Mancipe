@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - CONSTRUCCIONESMANCIPE</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body{
+            margin:0;
+            font-family:'Segoe UI',sans-serif;
+            background:#020617;
+            color:white;
+            display:flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar{
+            width:240px;
+            background:#1e293b;
+            height:100vh;
+            padding:25px;
+            position:fixed;
+        }
+
+        .sidebar h2{
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        .sidebar a{
+            display:block;
+            color:#94a3b8;
+            text-decoration:none;
+            padding:10px;
+            border-radius:8px;
+            margin-bottom:10px;
+            transition:0.3s;
+        }
+
+        .sidebar a:hover{
+            background:#2563eb;
+            color:white;
+        }
+
+        /* MAIN */
+        .main{
+            margin-left:260px;
+            padding:30px;
+            width:100%;
+        }
+
+        .header{
+            display:flex;
+            justify-content:space-between;
+            margin-bottom:30px;
+        }
+
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:20px;
+        }
+
+        .card{
+            background:linear-gradient(145deg,#1e293b,#0f172a);
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.4);
+            transition:0.3s;
+        }
+
+        .card:hover{
+            transform:translateY(-5px);
+        }
+
+        .card h3{
+            font-size:14px;
+            color:#94a3b8;
+        }
+
+        .card p{
+            font-size:28px;
+            font-weight:bold;
+            margin-top:10px;
+        }
+
+        /* 🎂 CUMPLEAÑOS PRO */
+
+        .cumple-box{
+            margin-top:40px;
+        }
+
+        .titulo-cumple{
+            font-size:22px;
+            margin-bottom:15px;
+            background: linear-gradient(90deg,#facc15,#f97316,#ec4899);
+            -webkit-background-clip: text;
+            color: transparent;
+            font-weight:bold;
+        }
+
+        .cumple-grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+            gap:15px;
+        }
+
+        .cumple-card{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            padding:15px;
+            border-radius:15px;
+            font-size:14px;
+            transition:0.3s;
+        }
+
+        .cumple-card:hover{
+            transform:scale(1.05);
+        }
+
+        .cumple-icon{
+            font-size:28px;
+        }
+
+        .hoy{
+            background:linear-gradient(135deg,#22c55e,#4ade80);
+            animation:latido 1.2s infinite;
+        }
+
+        .manana{
+            background:linear-gradient(135deg,#facc15,#f59e0b);
+            color:black;
+        }
+
+        .proximo{
+            background:linear-gradient(135deg,#3b82f6,#6366f1);
+        }
+
+        .sin-cumple{
+            background:#1e293b;
+            padding:15px;
+            border-radius:10px;
+            text-align:center;
+        }
+
+        @keyframes latido{
+            0%{transform:scale(1);}
+            50%{transform:scale(1.05);}
+            100%{transform:scale(1);}
+        }
+
+        .footer{
+            margin-top:40px;
+            color:#64748b;
+            font-size:12px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+<h2>CONSTRUCCIONES
+MANCIPE</h2>
+
+{% if session.get("rol") == "anonimo" %}
+
+    <a href="{{ url_for('pqrs') }}">📩 Quejas y Reclamos</a>
+
+{% else %}
+
+    <a href="/dashboard">🏠 Dashboard</a>
+    <a href="/busqueda">🔍 Búsqueda</a>
+    <a href="/cumpleanos">🎂 Cumpleaños</a>
+    <a href="/seguimiento">📊 Seguimiento</a>
+    <a href="{{ url_for('prestamos') }}">💰 Préstamos</a>
+
+    {% if session.get("rol") in ["gerencia","superusuario"] %}
+        <a href="{{ url_for('empleados') }}">👷 Empleados</a>
+    {% endif %}
+
+    {% if session.get("rol") == "superusuario" %}
+        <a href="{{ url_for('usuarios') }}">👥 Usuarios</a>
+    {% endif %}
+
+{% endif %}
+
+<a href="{{ url_for('logout') }}">🚪 Cerrar sesión</a>
+
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+    <div class="header">
+        <h1>Panel Ejecutivo</h1>
+        <div>{{ session["usuario"] }} ({{ session["rol"] }})</div>
+    </div>
+
+    <!-- CARDS -->
+    <div class="cards">
+
+        <div class="card">
+            <h3>Total Empleados</h3>
+            <p>{{ total_empleados }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Préstamos Activos</h3>
+            <p>{{ total_prestamos }}</p>
+        </div>
+
+        <div class="card">
+            <h3>PQRS</h3>
+            <p>{{ total_pqrs }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Estado Sistema</h3>
+            <p>🟢 Activo</p>
+        </div>
+
+    </div>
+
+    <!-- 🎂 CUMPLEAÑOS -->
+    <div class="cumple-box">
+
+        <h2 class="titulo-cumple">🎂 Cumpleaños del equipo</h2>
+
+        <div class="cumple-grid">
+
+            {% if alertas_cumple %}
+                {% for alerta in alertas_cumple %}
+
+                    <div class="cumple-card 
+                        {% if 'Hoy' in alerta %}hoy
+                        {% elif 'mañana' in alerta %}manana
+                        {% else %}proximo
+                        {% endif %}
+                    ">
+                        <div class="cumple-icon">🎉</div>
+                        <div>{{ alerta }}</div>
+                    </div>
+
+                {% endfor %}
+            {% else %}
+                <div class="sin-cumple">
+                    🎂 No hay cumpleaños próximos
+                </div>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <div class="footer">
+        © 2026 CONSTRUCCIONESMANCIPE | Sistema empresarial | Arr.SaS
+    </div>
+
+</div>
+
+</body>
+</html>

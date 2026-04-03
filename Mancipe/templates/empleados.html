@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Empleados</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="app-body">
+
+<!-- 🔥 SIDEBAR -->
+<div class="sidebar">
+
+<h2>CONSTRUCCIONES MANCIPE</h2>
+
+<a href="/dashboard">🏠 Dashboard</a>
+<a href="/cumpleanos">🎂 Cumpleaños</a>
+<a href="/seguimiento">📊 Seguimiento</a>
+
+{% if session.get("rol") in ["gerencia","superusuario"] %}
+<a href="{{ url_for('empleados') }}">👷 Empleados</a>
+{% endif %}
+
+{% if session.get("rol") == "superusuario" %}
+<a href="{{ url_for('usuarios') }}">👥 Usuarios</a>
+{% endif %}
+
+<a href="{{ url_for('logout') }}">🚪 Cerrar sesión</a>
+
+</div>
+
+<!-- 🔥 CONTENIDO -->
+<div class="container">
+
+<h1>Gestión de Empleados</h1>
+
+<form method="POST">
+
+<div class="form-secciones">
+
+<!-- DATOS PERSONALES -->
+<div class="card-form">
+
+<h3>👤 Datos Personales</h3>
+
+<div class="grid-3">
+
+<div class="campo">
+<label>Nombre</label>
+<input name="nombre" required>
+</div>
+
+<div class="campo">
+<label>Apellido</label>
+<input name="apellido" required>
+</div>
+
+<div class="campo">
+<label>Cédula</label>
+<input name="cedula">
+</div>
+
+<div class="campo">
+<label>Fecha expedición</label>
+<input type="date" name="fecha_expedicion">
+</div>
+
+<div class="campo">
+<label>Género</label>
+<select name="genero">
+<option value="">Seleccionar</option>
+<option>Masculino</option>
+<option>Femenino</option>
+</select>
+</div>
+
+<div class="campo">
+<label>Estado civil</label>
+<input name="estado_civil">
+</div>
+
+<div class="campo">
+<label>Dirección</label>
+<input name="direccion">
+</div>
+
+<div class="campo">
+<label>Edad</label>
+<input name="edad">
+</div>
+
+<div class="campo">
+<label>Fecha de nacimiento</label>
+<input type="date" name="fecha_nacimiento">
+</div>
+
+</div>
+</div>
+
+<!-- DATOS LABORALES -->
+<div class="card-form">
+
+<h3>💼 Datos Laborales</h3>
+
+<div class="grid-3">
+
+<div class="campo">
+<label>Puesto</label>
+<input name="puesto">
+</div>
+
+<div class="campo">
+<label>Salario</label>
+<input name="salario">
+</div>
+
+<div class="campo">
+<label>Tipo contrato</label>
+<select name="tipo_contrato">
+<option value="">Seleccionar</option>
+<option>Indefinido</option>
+<option>Fijo</option>
+<option>Obra o labor</option>
+<option>Aprendizaje</option>
+</select>
+</div>
+
+<div class="campo">
+<label>Fecha inicio</label>
+<input type="date" name="fecha_inicio">
+</div>
+
+<div class="campo">
+<label>Fecha fin</label>
+<input type="date" name="fecha_fin">
+</div>
+
+</div>
+</div>
+
+<!-- SEGURIDAD SOCIAL -->
+<div class="card-form">
+
+<h3>🛡 Seguridad Social</h3>
+
+<div class="grid-3">
+
+<div class="campo">
+<label>EPS</label>
+<input name="eps">
+</div>
+
+<div class="campo">
+<label>ARL</label>
+<input name="arl">
+</div>
+
+<div class="campo">
+<label>AFP</label>
+<input name="afp">
+</div>
+
+<div class="campo">
+<label>Celular</label>
+<input name="celular">
+</div>
+
+<div class="campo">
+<label>Correo</label>
+<input name="correo">
+</div>
+
+<div class="campo">
+<label>Fecha examen médico</label>
+<input type="date" name="fecha_examen_medico">
+</div>
+
+<div class="campo">
+<label>Curso de alturas</label>
+<input type="date" name="fecha_curso_alturas">
+</div>
+
+</div>
+</div>
+
+<!-- CONTACTO EMERGENCIA -->
+<div class="card-form emergencia">
+
+<h3>🚨 Contacto en caso de emergencia</h3>
+
+<div class="grid-2">
+
+<div class="campo">
+<label>Nombre</label>
+<input name="emergencia_nombre">
+</div>
+
+<div class="campo">
+<label>Teléfono</label>
+<input name="emergencia_telefono">
+</div>
+
+<div class="campo">
+<label>Dirección</label>
+<input name="emergencia_direccion">
+</div>
+
+<div class="campo">
+<label>Parentesco</label>
+<input name="emergencia_parentesco">
+</div>
+
+</div>
+</div>
+
+<div class="guardar">
+<button name="crear" class="btn-guardar">
+Guardar empleado
+</button>
+</div>
+
+</div>
+</form>
+
+<hr>
+
+<h2>Lista de empleados</h2>
+
+<a href="{{ url_for('exportar_empleados') }}">
+<button style="margin-bottom:15px;padding:10px;background:#16a34a;color:white;border:none;border-radius:6px;">
+Exportar a Excel
+</button>
+</a>
+
+<table>
+
+<tr>
+<th>Estado</th>
+<th>Nombre</th>
+<th>Acción</th>
+</tr>
+
+{% for emp in empleados %}
+
+<tr>
+
+<td>
+{% if emp["estado_contrato"] == "Activo" %}
+<span style="color:lime;font-size:20px;">●</span>
+{% else %}
+<span style="color:red;font-size:20px;">●</span>
+{% endif %}
+{{ emp["estado_contrato"] }}
+</td>
+
+<td>
+{{ emp["nombre"] }} {{ emp["apellido"] }}
+</td>
+
+<td>
+<a href="/empleado/{{ emp['id'] }}">
+<button>Ver hoja de vida</button>
+</a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+<br>
+
+<a href="{{ url_for('dashboard') }}">Volver al panel</a>
+
+</div>
+
+</body>
+</html>

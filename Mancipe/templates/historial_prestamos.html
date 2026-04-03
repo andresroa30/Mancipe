@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Historial de Préstamos</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI';
+background:#0f172a;
+color:white;
+display:flex;
+}
+
+.sidebar{
+width:250px;
+background:#1e293b;
+height:100vh;
+padding:30px 20px;
+position:fixed;
+}
+
+.sidebar a{
+display:block;
+color:#cbd5e1;
+text-decoration:none;
+padding:12px;
+border-radius:8px;
+margin-bottom:10px;
+}
+
+.sidebar a:hover{
+background:#2563eb;
+color:white;
+}
+
+.main{
+margin-left:250px;
+padding:40px;
+width:100%;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+}
+
+table{
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+}
+
+th,td{
+padding:12px;
+text-align:center;
+}
+
+th{
+background:#334155;
+}
+
+tr:hover{
+background:#334155;
+}
+
+button{
+padding:10px;
+border:none;
+border-radius:6px;
+background:#2563eb;
+color:white;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>CONSTRUCCIONES<br>MANCIPE</h2>
+
+{% if request.endpoint == 'prestamos' or request.endpoint == 'historial_prestamos' %}
+
+<a href="{{ url_for('prestamos') }}">💰 Préstamos Activos</a>
+
+<a href="{{ url_for('historial_prestamos') }}">📜 Historial</a>
+
+<a href="{{ url_for('dashboard') }}">⬅ Volver al Panel</a>
+
+{% else %}
+
+<a href="{{ url_for('dashboard') }}">🏠 Panel</a>
+
+<a href="{{ url_for('cumpleanos') }}">🎂 Cumpleaños</a>
+
+<a href="{{ url_for('prestamos') }}">💰 Préstamos</a>
+
+{% if session["rol"] == "superusuario" %}
+<a href="{{ url_for('usuarios') }}">👥 Usuarios</a>
+{% endif %}
+
+<a href="{{ url_for('logout') }}">🚪 Cerrar Sesión</a>
+
+{% endif %}
+
+</div>
+
+{% if session["rol"] == "superusuario" %}
+<a href="{{ url_for('usuarios') }}">👥 Usuarios</a>
+{% endif %}
+
+<a href="{{ url_for('logout') }}">🚪 Cerrar Sesión</a>
+
+</div>
+
+
+<div class="main">
+
+<h1>Historial de Préstamos Pagados</h1>
+
+<div class="card">
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>Empleado</th>
+<th>Valor Préstamo</th>
+<th>Meses</th>
+</tr>
+
+{% for h in historial %}
+
+<tr>
+
+<td>{{ h[0] }}</td>
+
+<td>{{ h[1] }}</td>
+
+<td>${{ "{:,.0f}".format(h[2]) }}</td>
+
+<td>{{ h[3] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

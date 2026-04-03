@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inasistencias</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>CONSTRUCCIONES MANCIPE</h2>
+    <a href="/dashboard">🏠 Dashboard</a>
+    <a href="/busqueda">🔍 Búsqueda</a>
+    <a href="/seguimiento">📊 Seguimiento</a>
+</div>
+
+<div class="main">
+    <h1>Inasistencias</h1>
+    <p class="subtitulo">Gestión de ausencias del personal</p>
+
+    <!-- FORMULARIO -->
+    <div class="card-formulario">
+
+        <form method="POST">
+
+            <!-- EMPLEADO -->
+            <label>Empleado</label>
+            <select id="empleado" name="empleado_id" required>
+                <option value="">Seleccione</option>
+                {% for emp in empleados %}
+                    <option value="{{ emp.id }}" data-cedula="{{ emp.cedula }}">
+                        {{ emp.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <!-- CEDULA -->
+            <label>Cédula</label>
+            <input type="text" id="cedula" readonly>
+
+            <!-- FECHAS -->
+            <label>Fecha inicio</label>
+            <input type="date" name="fecha_inicio" required>
+
+            <label>Fecha fin</label>
+            <input type="date" name="fecha_fin" required>
+
+            <!-- TIPO -->
+            <label>Tipo</label>
+            <select name="tipo" required>
+                <option value="">Seleccione</option>
+                <option value="dias">Días</option>
+                <option value="horas">Horas</option>
+            </select>
+
+            <!-- OBSERVACIONES -->
+            <label>Observaciones</label>
+            <textarea name="observaciones"></textarea>
+
+            <button type="submit">Guardar</button>
+
+        </form>
+
+    </div>
+
+    <!-- HISTORIAL -->
+    <h2 style="margin-top:40px;">📋 Historial de Inasistencias</h2>
+
+    <div class="tabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>Empleado</th>
+                    <th>Cédula</th>
+                    <th>Inicio</th>
+                    <th>Fin</th>
+                    <th>Días</th>
+                    <th>Horas</th>
+                    <th>Tipo</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in historial %}
+                <tr>
+                    <td>{{ i.nombre }}</td>
+                    <td>{{ i.cedula }}</td>
+                    <td>{{ i.fecha_inicio }}</td>
+                    <td>{{ i.fecha_fin }}</td>
+                    <td>{{ i.dias }}</td>
+                    <td>{{ i.horas }}</td>
+                    <td>{{ i.tipo }}</td>
+                    <td>{{ i.observaciones }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- SCRIPT -->
+<script>
+document.getElementById("empleado").addEventListener("change", function() {
+    let selectedOption = this.options[this.selectedIndex];
+    let cedula = selectedOption.getAttribute("data-cedula");
+    document.getElementById("cedula").value = cedula || "";
+});
+</script>
+
+</body>
+</html>

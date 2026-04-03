@@ -1,0 +1,135 @@
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#0f172a;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.login-box{
+background:#1e293b;
+padding:40px;
+border-radius:12px;
+width:320px;
+text-align:center;
+color:white;
+}
+
+.login-box h2{
+margin-bottom:20px;
+}
+
+.login-box input{
+width:100%;
+padding:10px;
+margin:10px 0;
+border:none;
+border-radius:6px;
+background:#0f172a;
+color:white;
+}
+
+.login-box button{
+width:100%;
+padding:10px;
+background:#2563eb;
+border:none;
+border-radius:6px;
+color:white;
+cursor:pointer;
+}
+
+.login-box button:hover{
+background:#1d4ed8;
+}
+
+/* FONDO LOGIN */
+
+.login-body{
+    margin:0;
+    font-family:'Segoe UI', sans-serif;
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+
+/* CONTENEDOR */
+
+.login-wrapper{
+    width:100%;
+    display:flex;
+    justify-content:center;
+}
+
+
+/* TARJETA */
+
+.login-card{
+    background:#1e293b;
+    padding:50px;
+    width:380px;
+    border-radius:14px;
+    text-align:center;
+    box-shadow:0 15px 40px rgba(0,0,0,0.4);
+}
+
+
+/* TITULO EMPRESA */
+
+.empresa{
+    margin:0;
+    font-size:28px;
+    color:white;
+}
+
+
+/* SUBTITULO */
+
+.subtitulo{
+    color:#94a3b8;
+    margin-bottom:30px;
+}
+
+
+/* FORMULARIO */
+
+.login-form{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+}
+
+
+/* INPUTS */
+
+.login-form input{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#0f172a;
+    color:white;
+    font-size:14px;
+}
+
+
+/* BOTON */
+
+.login-form button{
+    padding:12px;
+    border:none;
+    border-radius:8px;
+    background:#2563eb;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.login-form button:hover{
+    background:#1d4ed8;
+}

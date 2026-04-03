@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Préstamos - Construcciones Mancipe</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI';
+background:#0f172a;
+color:white;
+display:flex;
+}
+
+.sidebar{
+width:250px;
+background:#1e293b;
+height:100vh;
+padding:30px 20px;
+position:fixed;
+}
+
+.sidebar a{
+display:block;
+color:#cbd5e1;
+text-decoration:none;
+padding:12px;
+border-radius:8px;
+margin-bottom:10px;
+}
+
+.sidebar a:hover{
+background:#2563eb;
+color:white;
+}
+
+.main{
+margin-left:250px;
+padding:40px;
+width:100%;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:12px;
+margin-bottom:20px;
+}
+
+input,select,button{
+padding:10px;
+border:none;
+border-radius:6px;
+margin:5px;
+}
+
+button{
+background:#2563eb;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+table{
+width:100%;
+margin-top:20px;
+background:#1e293b;
+border-collapse:collapse;
+}
+
+th,td{
+padding:12px;
+text-align:center;
+}
+
+th{
+background:#334155;
+}
+
+tr:hover{
+background:#334155;
+}
+
+.acciones form{
+display:inline;
+}
+
+.historial{
+background:#16a34a;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="sidebar">
+
+<h2>CONSTRUCCIONES<br>MANCIPE</h2>
+
+{% if request.endpoint == 'prestamos' or request.endpoint == 'historial_prestamos' %}
+
+<a href="{{ url_for('prestamos') }}">💰 Préstamos Activos</a>
+
+<a href="{{ url_for('historial_prestamos') }}">📜 Historial</a>
+
+<a href="{{ url_for('dashboard') }}">⬅ Volver al Panel</a>
+
+{% else %}
+
+<a href="{{ url_for('dashboard') }}">🏠 Panel</a>
+
+<a href="{{ url_for('cumpleanos') }}">🎂 Cumpleaños</a>
+
+<a href="{{ url_for('prestamos') }}">💰 Préstamos</a>
+
+{% if session["rol"] == "superusuario" %}
+<a href="{{ url_for('usuarios') }}">👥 Usuarios</a>
+{% endif %}
+
+<a href="{{ url_for('logout') }}">🚪 Cerrar Sesión</a>
+
+{% endif %}
+
+</div>
+
+
+<div class="main">
+
+<h1>Gestión de Préstamos</h1>
+
+
+<div class="card">
+
+<h3>Nuevo Préstamo</h3>
+
+<form method="POST">
+
+<select name="empleado_id" required>
+<option value="">Seleccionar empleado</option>
+
+{% for e in empleados %}
+<option value="{{ e[0] }}">{{ e[1] }}</option>
+{% endfor %}
+
+</select>
+
+<input type="text" name="cargo" placeholder="Cargo" required>
+
+<input type="number" name="prestamo" placeholder="Valor préstamo" required>
+
+<input type="number" name="descuento" placeholder="Descuento mensual" required>
+
+<input type="number" name="tiempo_pago" placeholder="Meses" required>
+
+<button type="submit" name="crear">Crear Préstamo</button>
+
+</form>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>Préstamos Activos</h3>
+
+<table>
+
+<tr>
+<th>Empleado</th>
+<th>Cargo</th>
+<th>Préstamo</th>
+<th>Descuento</th>
+<th>Meses</th>
+<th>Deuda Actual</th>
+<th>Acciones</th>
+</tr>
+
+{% for p in prestamos %}
+
+<tr>
+
+<td>{{ p[1] }}</td>
+
+<td>{{ p[2] }}</td>
+
+<td>${{ "{:,.0f}".format(p[3]) }}</td>
+
+<td>${{ "{:,.0f}".format(p[4]) }}</td>
+
+<td>{{ p[5] }}</td>
+
+<td>${{ "{:,.0f}".format(p[6]) }}</td>
+
+<td class="acciones">
+
+<form method="POST">
+
+<input type="hidden" name="prestamo_id" value="{{p[0]}}">
+
+<button name="pagar">💰 Registrar Pago</button>
+
+</form>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+
+</body>
+</html>

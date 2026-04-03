@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="app-body">
+
+<!-- 🔥 SIDEBAR -->
+<div class="sidebar">
+
+<h2>CONSTRUCCIONES MANCIPE</h2>
+
+<a href="/dashboard">🏠 Dashboard</a>
+<a href="/cumpleanos">🎂 Cumpleaños</a>
+<a href="/seguimiento">📊 Seguimiento</a>
+
+{% if session.get("rol") in ["gerencia","superusuario"] %}
+<a href="{{ url_for('empleados') }}">👷 Empleados</a>
+{% endif %}
+
+{% if session.get("rol") == "superusuario" %}
+<a href="{{ url_for('usuarios') }}">👥 Usuarios</a>
+{% endif %}
+
+<a href="{{ url_for('logout') }}">🚪 Cerrar sesión</a>
+
+</div>
+
+<!-- 🔥 CONTENIDO -->
+<div class="container">
+
+<h1>👥 Gestión de Usuarios</h1>
+<p class="subtitulo">Administración de accesos al sistema</p>
+
+<!-- FORMULARIO -->
+<div class="card-form">
+
+<h3>➕ Crear Usuario</h3>
+
+<form method="POST">
+
+<div class="grid-3">
+
+<div class="campo">
+<label>Usuario</label>
+<input type="text" name="username" required>
+</div>
+
+<div class="campo">
+<label>Contraseña</label>
+<input type="password" name="password" required>
+</div>
+
+<div class="campo">
+<label>Rol</label>
+<select name="rol">
+<option value="superusuario">Superusuario</option>
+<option value="gerencia">Gerencia</option>
+<option value="supervisor">Supervisor</option>
+<option value="anonimo">Anonimo</option>
+</select>
+</div>
+
+</div>
+
+<div class="guardar">
+<button class="btn-guardar" name="crear">Crear Usuario</button>
+</div>
+
+</form>
+
+</div>
+
+<hr>
+
+<!-- TABLA -->
+<h2>📋 Lista de Usuarios</h2>
+
+<div class="tabla">
+
+<table>
+<tr>
+<th>ID</th>
+<th>Usuario</th>
+<th>Rol</th>
+<th>Acción</th>
+</tr>
+
+{% for u in usuarios %}
+
+<tr>
+<td>{{ u[0] }}</td>
+<td>{{ u[1] }}</td>
+<td>{{ u[2] }}</td>
+
+<td>
+{% if u[1] != session["usuario"] %}
+
+<form method="POST" style="display:inline;">
+<input type="hidden" name="user_id" value="{{ u[0] }}">
+
+<button type="submit" name="eliminar" 
+style="background:#dc2626;color:white;border:none;padding:6px 10px;border-radius:6px;cursor:pointer;">
+Eliminar
+</button>
+
+</form>
+
+{% else %}
+<span style="color:#22c55e;font-weight:bold;">(Tú)</span>
+{% endif %}
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+<br>
+
+<a href="{{ url_for('dashboard') }}">← Volver al panel</a>
+
+</div>
+
+</body>
+</html>

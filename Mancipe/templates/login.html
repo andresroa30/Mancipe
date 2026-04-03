@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Construcciones Mancipe | Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body class="login-body">
+
+    <div class="login-wrapper">
+        
+        <div class="login-card">
+
+            <h1 class="empresa">Construcciones Mancipe</h1>
+            <p class="subtitulo">Sistema Empresarial Interno</p>
+
+            <!-- MENSAJE DE ERROR -->
+            {% if error %}
+            <div class="error-box">
+                {{ error }}
+            </div>
+            {% endif %}
+
+            <form method="POST" class="login-form">
+                <input type="text" name="usuario" placeholder="Usuario" required>
+                <input type="password" name="password" placeholder="Contraseña" required>
+                <button type="submit">Iniciar Sesión</button>
+            </form>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

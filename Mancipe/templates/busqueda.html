@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Búsqueda de Inasistencias</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #334155;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            padding: 12px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-btn.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .search-form {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            margin-bottom: 30px;
+        }
+
+        .search-form .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .search-form .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .search-form label {
+            font-size: 14px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .search-form input,
+        .search-form select {
+            background: #020617;
+            border: 1px solid #334155;
+            padding: 10px;
+            border-radius: 8px;
+            color: white;
+            transition: 0.2s;
+        }
+
+        .search-form input:focus,
+        .search-form select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px rgba(37,99,235,0.3);
+            outline: none;
+        }
+
+        .btn-buscar {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(37,99,235,0.4);
+        }
+
+        .btn-buscar:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(37,99,235,0.6);
+        }
+
+        .resultados-container {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .sin-resultados {
+            text-align: center;
+            padding: 40px;
+            color: #94a3b8;
+        }
+
+        .sin-resultados p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+
+        th {
+            background: #2563eb;
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background: #0f172a;
+        }
+
+        tr:hover {
+            background: #334155;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-dias {
+            background: #ef4444;
+            color: white;
+        }
+
+        .badge-horas {
+            background: #f59e0b;
+            color: white;
+        }
+    </style>
+</head>
+<body class="app-body">
+
+<div class="sidebar">
+    <h2>CONSTRUCCIONES MANCIPE</h2>
+
+    <a href="/dashboard">🏠 Panel</a>
+    <a href="/busqueda" style="background:#2563eb; color:white;">🔍 Búsqueda</a>
+    <a href="/empleados">👥 Empleados</a>
+    <a href="/seguimiento">📊 Seguimiento</a>
+    <a href="/logout">🚪 Salir</a>
+</div>
+
+<div class="container">
+
+    <h1>🔍 Búsqueda de Inasistencias</h1>
+    <p class="subtitulo">Busca inasistencias por empleado o rango de fechas</p>
+
+    <!-- TABS -->
+    <div class="tabs">
+        <button class="tab-btn {% if tipo_busqueda == 'empleado' or tipo_busqueda == None %}active{% endif %}" onclick="cambiarTab('empleado')">
+            👤 Por Empleado
+        </button>
+        <button class="tab-btn {% if tipo_busqueda == 'fecha' %}active{% endif %}" onclick="cambiarTab('fecha')">
+            📅 Por Fecha
+        </button>
+    </div>
+
+    <!-- TAB: POR EMPLEADO -->
+    <div id="tab-empleado" class="tab-content {% if tipo_busqueda == 'empleado' or tipo_busqueda == None %}active{% endif %}">
+        <div class="search-form">
+            <form method="POST">
+                <input type="hidden" name="tipo_busqueda" value="empleado">
+                
+                <div class="grid-2">
+                    <div class="campo">
+                        <label>Selecciona un Empleado</label>
+                        <select name="empleado_id" required>
+                            <option value="">-- Selecciona --</option>
+                            {% for emp in empleados %}
+                                <option value="{{ emp.id }}">
+                                    {{ emp.nombre }} {{ emp.apellido }} ({{ emp.cedula }})
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-buscar" style="margin-top: 20px;">🔍 Buscar Inasistencias</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- TAB: POR FECHA -->
+    <div id="tab-fecha" class="tab-content {% if tipo_busqueda == 'fecha' %}active{% endif %}">
+        <div class="search-form">
+            <form method="POST">
+                <input type="hidden" name="tipo_busqueda" value="fecha">
+                
+                <div class="grid-2">
+                    <div class="campo">
+                        <label>Fecha de Inicio</label>
+                        <input type="date" name="fecha_inicio" required>
+                    </div>
+
+                    <div class="campo">
+                        <label>Fecha de Fin</label>
+                        <input type="date" name="fecha_fin" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-buscar" style="margin-top: 20px;">🔍 Buscar Inasistencias</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- RESULTADOS -->
+    {% if tipo_busqueda %}
+        <div class="resultados-container">
+            {% if resultados %}
+                <h2>📋 Resultados ({{ resultados | length }} encontrados)</h2>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Empleado</th>
+                            <th>Cédula</th>
+                            <th>Inicio</th>
+                            <th>Fin</th>
+                            <th>Días</th>
+                            <th>Horas</th>
+                            <th>Tipo</th>
+                            <th>Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for resultado in resultados %}
+                        <tr>
+                            <td><strong>{{ resultado.nombre }} {{ resultado.apellido }}</strong></td>
+                            <td>{{ resultado.cedula }}</td>
+                            <td>{{ resultado.fecha_inicio }}</td>
+                            <td>{{ resultado.fecha_fin }}</td>
+                            <td><span class="badge badge-dias">{{ resultado.dias }} días</span></td>
+                            <td><span class="badge badge-horas">{{ resultado.horas }} h</span></td>
+                            <td>{{ resultado.tipo }}</td>
+                            <td>{{ resultado.observaciones or '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="sin-resultados">
+                    <p>❌ No se encontraron resultados</p>
+                    <p style="color: #64748b; font-size: 14px;">Intenta con otros criterios de búsqueda</p>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</div>
+
+<script>
+function cambiarTab(tab) {
+    // Ocultar todos los tabs
+    document.getElementById('tab-empleado').classList.remove('active');
+    document.getElementById('tab-fecha').classList.remove('active');
+
+    // Mostrar el tab seleccionado
+    document.getElementById('tab-' + tab).classList.add('active');
+
+    // Actualizar botones
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Hoja de vida</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<style>
+
+.perfil-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:25px;
+margin-top:20px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+box-shadow:0px 2px 10px rgba(0,0,0,0.4);
+}
+
+.card h3{
+margin-bottom:15px;
+border-bottom:1px solid #334155;
+padding-bottom:5px;
+}
+
+.dato{
+margin-bottom:8px;
+}
+
+.estado-activo{
+color:#22c55e;
+font-weight:bold;
+}
+
+.estado-inactivo{
+color:#ef4444;
+font-weight:bold;
+}
+
+.card-emergencia{
+background:#2a1f1f;
+border-left:4px solid #ef4444;
+}
+
+</style>
+
+</head>
+
+<body class="app-body">
+
+<div class="container">
+
+<h1>{{ empleado["nombre"] }} {{ empleado["apellido"] }}</h1>
+
+<p>
+
+Estado:
+
+{% if empleado["estado_contrato"] == "Activo" %}
+<span class="estado-activo">● Activo</span>
+{% else %}
+<span class="estado-inactivo">● Inactivo</span>
+{% endif %}
+
+</p>
+
+<a href="/editar_empleado/{{ empleado['id'] }}">
+<button style="margin-bottom:20px;">
+Editar información
+</button>
+</a>
+
+<div class="perfil-grid">
+
+<!-- INFORMACION PERSONAL -->
+
+<div class="card">
+
+<h3>Información Personal</h3>
+
+<p class="dato"><b>Cédula:</b> {{ empleado["cedula"] }}</p>
+<p class="dato"><b>Genero:</b> {{ empleado["genero"] }}</p>
+<p class="dato"><b>Estado civil:</b> {{ empleado["estado_civil"] }}</p>
+<p class="dato"><b>Dirección:</b> {{ empleado["direccion"] }}</p>
+<p class="dato"><b>Celular:</b> {{ empleado["celular"] }}</p>
+<p class="dato"><b>Correo:</b> {{ empleado["correo"] }}</p>
+
+</div>
+
+<!-- INFORMACION LABORAL -->
+
+<div class="card">
+
+<h3>Información Laboral</h3>
+
+<p class="dato"><b>Puesto:</b> {{ empleado["puesto"] }}</p>
+<p class="dato"><b>Tipo contrato:</b> {{ empleado["tipo_contrato"] }}</p>
+<p class="dato"><b>Salario:</b> {{ empleado["salario"] }}</p>
+<p class="dato"><b>Fecha inicio:</b> {{ empleado["fecha_inicio"] }}</p>
+<p class="dato"><b>Fecha fin:</b> {{ empleado["fecha_fin"] }}</p>
+
+</div>
+
+<!-- SEGURIDAD SOCIAL -->
+
+<div class="card">
+
+<h3>Seguridad Social</h3>
+
+<p class="dato"><b>EPS:</b> {{ empleado["eps"] }}</p>
+<p class="dato"><b>AFP:</b> {{ empleado["afp"] }}</p>
+<p class="dato"><b>ARL:</b> {{ empleado["arl"] }}</p>
+
+</div>
+
+<!-- SALUD Y SEGURIDAD -->
+
+<div class="card">
+
+<h3>Seguridad y Salud</h3>
+
+<p class="dato"><b>Examen médico:</b> {{ empleado["fecha_examen_medico"] }}</p>
+<p class="dato"><b>Curso alturas:</b> {{ empleado["fecha_curso_alturas"] }}</p>
+
+</div>
+
+<!-- CONTACTO EMERGENCIA -->
+
+<div class="card card-emergencia">
+
+<h3>🚨 Contacto de Emergencia</h3>
+
+<p class="dato"><b>Nombre:</b> {{ empleado["emergencia_nombre"] }}</p>
+<p class="dato"><b>Teléfono:</b> {{ empleado["emergencia_telefono"] }}</p>
+<p class="dato"><b>Dirección:</b> {{ empleado["emergencia_direccion"] }}</p>
+<p class="dato"><b>Parentesco:</b> {{ empleado["emergencia_parentesco"] }}</p>
+
+</div>
+
+</div>
+
+<br>
+
+<a href="/empleados">
+<button>Volver</button>
+</a>
+
+</div>
+
+</body>
+
+</html>

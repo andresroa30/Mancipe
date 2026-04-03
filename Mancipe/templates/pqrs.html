@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>PQRS - Construcciones Mancipe</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:#0f172a;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:#1e293b;
+padding:40px;
+border-radius:15px;
+width:500px;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+h2{
+text-align:center;
+margin-bottom:30px;
+}
+
+label{
+display:block;
+margin-top:15px;
+color:#cbd5e1;
+}
+
+input,select,textarea{
+width:100%;
+padding:12px;
+margin-top:5px;
+border-radius:8px;
+border:none;
+background:#0f172a;
+color:white;
+}
+
+textarea{
+resize:none;
+height:120px;
+}
+
+.numero{
+background:#334155;
+font-weight:bold;
+text-align:center;
+}
+
+button{
+margin-top:25px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:8px;
+background:#2563eb;
+color:white;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+.exito{
+background:#16a34a;
+padding:10px;
+border-radius:8px;
+text-align:center;
+margin-bottom:15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>📩 Formulario PQRS</h2>
+
+{% if enviado %}
+<div class="exito">
+PQRS enviada correctamente
+</div>
+{% endif %}
+
+<form method="POST">
+
+<label>Número de Reclamo</label>
+<input class="numero" type="text" value="{{numero}}" readonly>
+
+<label>Fecha</label>
+<input type="date" name="fecha" required>
+
+<label>Tipo de requerimiento</label>
+
+<select name="tipo">
+
+<option>Petición</option>
+<option>Queja</option>
+<option>Reclamo</option>
+<option>Sugerencia</option>
+<option>Reconocimiento</option>
+
+</select>
+
+<label>Descripción</label>
+
+<textarea name="descripcion" required></textarea>
+
+<button type="submit">Enviar PQRS</button>
+
+</form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Editar empleado</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body class="app-body">
+
+<div class="container">
+
+<h1>Editar empleado</h1>
+
+<p class="subtitulo">Actualiza la información del empleado</p>
+
+<form method="POST" class="form-secciones">
+
+<!-- INFORMACION PERSONAL -->
+
+<div class="card-form">
+
+<h3>👤 Información Personal</h3>
+
+<div class="grid-2">
+
+<div class="campo">
+<label>Nombre</label>
+<input type="text" name="nombre" value="{{ empleado['nombre'] or '' }}" placeholder="Nombre" required>
+</div>
+
+<div class="campo">
+<label>Apellido</label>
+<input type="text" name="apellido" value="{{ empleado['apellido'] or '' }}" placeholder="Apellido" required>
+</div>
+
+<div class="campo">
+<label>Cédula</label>
+<input type="text" name="cedula" value="{{ empleado['cedula'] or '' }}" placeholder="Cédula" required>
+</div>
+
+<div class="campo">
+<label>Género</label>
+<select name="genero" required>
+<option value="">Selecciona una opción</option>
+<option value="Masculino" {% if empleado['genero']=="Masculino" %}selected{% endif %}>Masculino</option>
+<option value="Femenino" {% if empleado['genero']=="Femenino" %}selected{% endif %}>Femenino</option>
+</select>
+</div>
+
+<div class="campo">
+<label>Estado Civil</label>
+<input type="text" name="estado_civil" value="{{ empleado['estado_civil'] or '' }}" placeholder="Estado civil">
+</div>
+
+<div class="campo">
+<label>Dirección</label>
+<input type="text" name="direccion" value="{{ empleado['direccion'] or '' }}" placeholder="Dirección">
+</div>
+
+<div class="campo">
+<label>Celular</label>
+<input type="text" name="celular" value="{{ empleado['celular'] or '' }}" placeholder="Celular" required>
+</div>
+
+<div class="campo">
+<label>Correo</label>
+<input type="email" name="correo" value="{{ empleado['correo'] or '' }}" placeholder="Correo" required>
+</div>
+
+</div>
+
+</div>
+
+<!-- INFORMACION LABORAL -->
+
+<div class="card-form">
+
+<h3>💼 Información Laboral</h3>
+
+<div class="grid-2">
+
+<div class="campo">
+<label>Puesto</label>
+<input type="text" name="puesto" value="{{ empleado['puesto'] or '' }}" placeholder="Puesto" required>
+</div>
+
+<div class="campo">
+<label>Tipo de Contrato</label>
+<input type="text" name="tipo_contrato" value="{{ empleado['tipo_contrato'] or '' }}" placeholder="Tipo contrato">
+</div>
+
+<div class="campo">
+<label>Salario</label>
+<input type="number" name="salario" value="{{ empleado['salario'] or '' }}" placeholder="Salario" step="0.01">
+</div>
+
+<div class="campo">
+<label>Edad</label>
+<input type="number" name="edad" value="{{ empleado['edad'] or '' }}" placeholder="Edad">
+</div>
+
+<div class="campo">
+<label>Fecha de Nacimiento</label>
+<input type="date" name="fecha_nacimiento" value="{{ empleado['fecha_nacimiento'] or '' }}">
+</div>
+
+<div class="campo">
+<label>Fecha de Inicio</label>
+<input type="date" name="fecha_inicio" value="{{ empleado['fecha_inicio'] or '' }}">
+</div>
+
+<div class="campo">
+<label>Fecha de Fin</label>
+<input type="date" name="fecha_fin" value="{{ empleado['fecha_fin'] or '' }}">
+</div>
+
+</div>
+
+</div>
+
+<!-- SEGURIDAD SOCIAL -->
+
+<div class="card-form">
+
+<h3>🏥 Seguridad Social</h3>
+
+<div class="grid-2">
+
+<div class="campo">
+<label>EPS</label>
+<input type="text" name="eps" value="{{ empleado['eps'] or '' }}" placeholder="EPS">
+</div>
+
+<div class="campo">
+<label>ARL</label>
+<input type="text" name="arl" value="{{ empleado['arl'] or '' }}" placeholder="ARL">
+</div>
+
+<div class="campo">
+<label>AFP</label>
+<input type="text" name="afp" value="{{ empleado['afp'] or '' }}" placeholder="AFP">
+</div>
+
+</div>
+
+</div>
+
+<!-- DOCUMENTOS -->
+
+<div class="card-form">
+
+<h3>📄 Documentos y Certificaciones</h3>
+
+<div class="grid-2">
+
+<div class="campo">
+<label>Fecha de Expedición de Cédula</label>
+<input type="date" name="fecha_expedicion" value="{{ empleado['fecha_expedicion'] or '' }}">
+</div>
+
+<div class="campo">
+<label>Fecha de Examen Médico</label>
+<input type="date" name="fecha_examen_medico" value="{{ empleado['fecha_examen_medico'] or '' }}">
+</div>
+
+<div class="campo">
+<label>Curso de Alturas</label>
+<input type="date" name="fecha_curso_alturas" value="{{ empleado['fecha_curso_alturas'] or '' }}">
+</div>
+
+</div>
+
+</div>
+
+<!-- CONTACTO EMERGENCIA -->
+
+<div class="card-form emergencia">
+
+<h3>🚨 Contacto de Emergencia</h3>
+
+<div class="grid-2">
+
+<div class="campo">
+<label>Nombre</label>
+<input type="text" name="emergencia_nombre" value="{{ empleado['emergencia_nombre'] or '' }}" placeholder="Nombre">
+</div>
+
+<div class="campo">
+<label>Teléfono</label>
+<input type="text" name="emergencia_telefono" value="{{ empleado['emergencia_telefono'] or '' }}" placeholder="Teléfono">
+</div>
+
+<div class="campo">
+<label>Dirección</label>
+<input type="text" name="emergencia_direccion" value="{{ empleado['emergencia_direccion'] or '' }}" placeholder="Dirección">
+</div>
+
+<div class="campo">
+<label>Parentesco</label>
+<input type="text" name="emergencia_parentesco" value="{{ empleado['emergencia_parentesco'] or '' }}" placeholder="Parentesco">
+</div>
+
+</div>
+
+</div>
+
+<div class="guardar">
+<button type="submit" class="btn-guardar">✅ Guardar cambios</button>
+</div>
+
+</form>
+
+<br>
+
+<a href="/empleados">← Volver a empleados</a>
+
+</div>
+
+</body>
+
+</html>

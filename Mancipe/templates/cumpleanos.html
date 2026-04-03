@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cumpleaños - Construcciones Mancipe</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI', sans-serif;
+background:#0f172a;
+color:white;
+display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:250px;
+background:#1e293b;
+height:100vh;
+padding:30px 20px;
+position:fixed;
+}
+
+.sidebar h2{
+text-align:center;
+margin-bottom:40px;
+}
+
+.sidebar a{
+display:block;
+color:#cbd5e1;
+text-decoration:none;
+padding:12px;
+border-radius:8px;
+margin-bottom:10px;
+}
+
+.sidebar a:hover{
+background:#2563eb;
+color:white;
+}
+
+/* CONTENIDO */
+
+.main{
+margin-left:250px;
+padding:40px;
+width:100%;
+}
+
+.cards{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:30px;
+margin-top:20px;
+}
+
+.card{
+background:#1e293b;
+padding:25px;
+border-radius:12px;
+}
+
+/* FORMULARIO */
+
+input,button{
+padding:10px;
+border:none;
+border-radius:6px;
+margin:5px 0;
+}
+
+input{
+background:#0f172a;
+color:white;
+width:100%;
+}
+
+button{
+background:#2563eb;
+color:white;
+cursor:pointer;
+}
+
+button:hover{
+background:#1d4ed8;
+}
+
+/* TABLA */
+
+table{
+width:100%;
+margin-top:10px;
+border-collapse:collapse;
+}
+
+th,td{
+padding:10px;
+text-align:left;
+}
+
+tr:hover{
+background:#334155;
+}
+
+/* ALERTAS */
+
+.alert{
+background:#2563eb;
+padding:10px;
+border-radius:6px;
+margin-bottom:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h2>CONSTRUCCIONES<br>MANCIPE</h2>
+
+<!-- MENU PRESTAMOS -->
+{% if request.endpoint == 'prestamos' or request.endpoint == 'historial_prestamos' %}
+
+<a href="{{ url_for('prestamos') }}">💰 Préstamos Activos</a>
+<a href="{{ url_for('historial_prestamos') }}">📜 Historial</a>
+<a href="{{ url_for('dashboard') }}">⬅ Volver al Panel</a>
+
+<!-- MENU CUMPLEAÑOS -->
+{% elif request.endpoint == 'cumpleanos' %}
+
+<a href="{{ url_for('cumpleanos') }}">🎂 Cumpleaños</a>
+<a href="{{ url_for('dashboard') }}">⬅ Volver al Panel</a>
+
+<!-- MENU NORMAL -->
+{% else %}
+
+<a href="{{ url_for('dashboard') }}">🏠 Panel</a>
+<a href="{{ url_for('cumpleanos') }}">🎂 Cumpleaños</a>
+<a href="{{ url_for('prestamos') }}">💰 Préstamos</a>
+
+{% if session["rol"] == "superusuario" %}
+<a href="{{ url_for('usuarios') }}">👥 Usuarios</a>
+{% endif %}
+
+<a href="{{ url_for('logout') }}">🚪 Cerrar Sesión</a>
+
+{% endif %}
+
+</div>
+
+<!-- CONTENIDO -->
+
+<div class="main">
+
+<h1>🎂 Gestión de Cumpleaños</h1>
+
+<!-- ALERTAS -->
+
+{% if alertas %}
+    {% for alerta in alertas %}
+        <div class="alert">
+            🎉 {{ alerta.nombre }} cumple 
+            {% if alerta.dias == 0 %}
+                HOY
+            {% else %}
+                en {{ alerta.dias }} días
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<div class="cards">
+
+<!-- REGISTRAR -->
+
+<div class="card">
+
+<h3>Registrar Cumpleaños</h3>
+
+<form method="POST">
+
+<input type="text" name="nombre" placeholder="Nombre del empleado" required>
+
+<input type="date" name="fecha" required>
+
+<br>
+
+<button type="submit">➕ Agregar</button>
+
+</form>
+
+</div>
+
+<!-- LISTA -->
+
+<div class="card">
+
+<h3>Lista de Cumpleaños</h3>
+
+<table>
+    <tr>
+        <th>Empleado</th>
+        <th>Fecha</th>
+        <th>Días faltantes</th>
+    </tr>
+
+    {% for emp in lista %}
+    <tr>
+        <td>{{ emp.nombre }}</td>
+        <td>{{ emp.fecha }}</td>
+        <td>
+            {% if emp.dias <= 2 %}
+                🔴 {{ emp.dias }} días
+            {% elif emp.dias <= 7 %}
+                🟡 {{ emp.dias }} días
+            {% else %}
+                {{ emp.dias }} días
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>
